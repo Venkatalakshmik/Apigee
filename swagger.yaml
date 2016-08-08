@@ -1,0 +1,117 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Papa Johns
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+  # - https
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+x-a127-config: {}
+x-a127-services: {}
+paths:
+  /track:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: hello_world
+    x-a127-apply: {}
+    put:
+     description: Updates a post in the posts collection.
+     operationId: updatePost
+     parameters:
+       - name: id
+         in: path
+         description: The posts ID
+         required: true
+         type: string
+       - name: post
+         in: body
+         description: The posts contents
+         required: true
+         schema:
+           $ref: '#/definitions/Post'
+     tags:
+       - Posts
+     produces:
+       - application/json
+       # - text/html
+     responses:
+       200:
+         description: OK
+         schema:
+           $ref: '#/definitions/SuccessResponse'
+       404:
+         description: Not Found
+         schema:
+           $ref: '#/definitions/ErrorResponse'
+       500:
+         description: Internal Server Error
+     schema:
+           $ref: '#/definitions/ErrorResponse'
+definitions:
+  Post:
+   required:
+     - title
+     - markdown
+     - html
+   properties:
+     id:
+       type: string
+       description: The posts unique identifier.
+     title:
+       type: string
+       description: The posts title -> My First Blog Post.
+     slug:
+       type: string
+       description: The posts slug -> my-first-blog-post.
+     markdown:
+       type: string
+       description: The posts Markdown content.
+     html:
+       type: string
+       description: The posts HTML content.
+     image:
+       type: string
+       description: Associate a featured image with the post.
+     featured:
+       type: boolean
+       description: Highlight this blog post.
+     page:
+       type: boolean
+       description: Posts are listed in order from newest to oldest, pages are static and not listed by date.
+     state:
+       type: string
+       description: The posts status -> draft.
+     locale:
+       type: string
+       description: The posts (language and) locale -> en_GB.
+     metaTitle:
+       type: string
+       description: Search Engine Optimsed (SEO) post title.
+     metaDescription:
+       type: string
+       description: Search Engine Optimsed (SEO) post description.
+SuccessResponse:
+   required:
+     - id
+   properties:
+     id:
+       type: string
+ErrorResponse:
+   required:
+     - code
+     - message
+   properties:
+     code:
+       type: integer
+     message:
+type: string
